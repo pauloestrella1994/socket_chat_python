@@ -2,15 +2,16 @@ import socket
 
 
 def client(client_connection):
-  while True:
-    client_message = input()
-    client_connection.sendto(client_message.encode(), (socket.gethostbyname(socket.gethostname()), 12000))
-    message_bytes, ip_address_server = client_connection.recvfrom(2048)
-    print(f"Receiving message from server: {message_bytes.decode()}")
-    if message_bytes.decode() == "q":
-      print(f"Closing client connection with the server ip: {ip_address_server[0]}; port: {ip_address_server[1]}")
-      client_connection.close()
-      break
+  try:
+    while True:
+      client_message = input()
+      client_connection.sendto(client_message.encode(), (socket.gethostbyname(socket.gethostname()), 12000))
+      message_bytes, ip_address_server = client_connection.recvfrom(2048)
+      print(f"Receiving message from server: {message_bytes.decode()}")
+  except KeyboardInterrupt:
+    print(f"Closing client connection with the server ip: {ip_address_server[0]}; port: {ip_address_server[1]}")
+  finally:
+    client_connection.close()
 
 if __name__ == "__main__":
   try:
