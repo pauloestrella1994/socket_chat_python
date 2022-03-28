@@ -5,9 +5,8 @@ def server(server_connection):
   print(f"Server up and listening port: 12000")
   while True:
     message_bytes, ip_address_server = server_connection.recvfrom(2048)
-    message = message_bytes.decode()
-    print(f"Message from client: {message}")
-    server_connection.sendto(message.encode(), ip_address_server)
+    print(f"Message from client: {message_bytes.decode()}")
+    server_connection.sendto(message_bytes, ip_address_server)
   
 if __name__ == "__main__":
   try:
