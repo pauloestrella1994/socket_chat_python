@@ -9,7 +9,7 @@ def client(client_connection):
       message_bytes, ip_address_server = client_connection.recvfrom(2048)
       print(f"Receiving message from server: {message_bytes.decode()}")
   except KeyboardInterrupt:
-    print(f"Closing client connection with the server ip: {ip_address_server[0]}; port: {ip_address_server[1]}")
+    print(f"Closing client connection with the server.")
   finally:
     client_connection.close()
 
