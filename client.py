@@ -15,7 +15,9 @@ def client(client_connection):
 
 if __name__ == "__main__":
   try:
-    client_connection = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    client_connection = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+    client_connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+    client_connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
     print(f"Start connection with the server: {client_connection}")
     client(client_connection)
   except socket.error as e:
