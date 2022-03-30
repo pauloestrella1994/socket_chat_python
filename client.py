@@ -6,7 +6,7 @@ class Client:
     while True:
       try:
         message = client.recv(1024).decode()
-        if message == 'NICK':
+        if message == 'nickname':
           client.send(nickname.encode())
         else:
           print(message)

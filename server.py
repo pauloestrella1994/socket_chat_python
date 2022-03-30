@@ -26,22 +26,26 @@ class Server:
         self.nicknames.remove(nickname)
         break
 
-  def receive(self):
+  def receive(self, server):
     while True:
-      client, address = server.accept()
-      print(f"Connected with {str(address)}")
+      try: 
+        client, address = server.accept()
+        print(f"Connected with {str(address)}")
 
-      client.send('NICK'.encode())
-      nickname = client.recv(1024).decode()
-      self.nicknames.append(nickname)
-      self.clients.append(client)
+        client.send('nickname'.encode())
+        nickname = client.recv(1024).decode()
+        self.nicknames.append(nickname)
+        self.clients.append(client)
 
-      print(f'Nickname ok the client is {nickname}!')
-      self.broadcast(f"{nickname} joined the chat!".encode())
-      client.send('Connected to the server!'.encode())
+        print(f'Nickname ok the client is {nickname}!')
+        self.broadcast(f"{nickname} joined the chat!".encode())
+        client.send('Connected to the server!'.encode())
 
-      thread = threading.Thread(target=self.handle, args=(client,))
-      thread.start()
+        thread = threading.Thread(target=self.handle, args=(client,))
+        thread.start()
+      except:
+        print("Closing connection!")
+        break
 
 
 if __name__ == '__main__':
@@ -53,7 +57,7 @@ if __name__ == '__main__':
     server.listen()
     print("Welcome to the server chat room!")
     print("Waiting for clients...")
-    Server().receive()
+    Server().receive(server)
   except ConnectionResetError as e:
     print(f"Connection failed with clients!: {e}")
   except KeyboardInterrupt:
