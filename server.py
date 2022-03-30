@@ -1,34 +1,52 @@
-import socket
+import threading, socket
 
 
-def send_message(server_connection, message_bytes, client):
-  server_connection.sendto(message_bytes, client)
-  return
+host = '127.0.0.1'
+port = 55555
 
-def server(server_connection):
-  clients = set()
-  print(f"Server up and listening port: 12000")
-  try:
-    while True:
-      message_bytes, address_client = server_connection.recvfrom(2048)
-      print(f"Message from client: {message_bytes.decode()}")
-      clients.add(address_client)
-      for client in clients:
-        send_message(server_connection,message_bytes, client)
-  except socket.error as e:
-    print(f"A error occur in socket: {e}")
-    server_connection.close()
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind((host, port))
+server.listen()
 
-if __name__ == "__main__":
-  try:
-    server_connection = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-    server_connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-    server_connection.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-    server_connection.bind((socket.gethostbyname(socket.gethostname()), 12000))
-    server(server_connection)
-  except socket.error as e:
-    print(f"A socket connecting problem occur: {e}")
-  except KeyboardInterrupt as e:
-    print("Closing server connection")
-  finally:
-    server_connection.close()
+clients = []
+nicknames = []
+
+def broadcast(message):
+  for client in clients:
+    client.send(message)
+
+def handle(client):
+  while True:
+    try:
+      message = client.recv(1024)
+      broadcast(message)
+    except:
+      index = clients.index(client)
+      clients.remove(client)
+      client.close()
+      nickname = nicknames[index]
+      broadcast(f'{nickname} left chat!'.encode())
+      nicknames.remove(nickname)
+      break
+
+def receive():
+  while True:
+    client, address = server.accept()
+    print(f"Connected with {str(address)}")
+
+    client.send('NICK'.encode())
+    nickname = client.recv(1024).decode()
+    nicknames.append(nickname)
+    clients.append(client)
+
+    print(f'Nickname ok the client is {nickname}!')
+    broadcast(f"{nickname} joined the chat!".encode())
+    client.send('Connected to the server!'.encode())
+
+    thread = threading.Thread(target=handle, args=(client,))
+    thread.start()
+
+if __name__ == '__main__':
+  print("Welcome to the server chat room!")
+  print("Waiting for clients...")
+  receive()
