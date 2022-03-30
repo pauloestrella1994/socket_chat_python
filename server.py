@@ -42,6 +42,7 @@ class Server:
         client.send('Connected to the server!'.encode())
 
         thread = threading.Thread(target=self.handle, args=(client,))
+        thread.daemon = True
         thread.start()
       except:
         print("Closing connection!")
