@@ -47,9 +47,16 @@ class Server:
 if __name__ == '__main__':
   host = '127.0.0.1'
   port = 55555
-  server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  server.bind((host, port))
-  server.listen()
-  print("Welcome to the server chat room!")
-  print("Waiting for clients...")
-  Server().receive()
+  try:
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind((host, port))
+    server.listen()
+    print("Welcome to the server chat room!")
+    print("Waiting for clients...")
+    Server().receive()
+  except ConnectionResetError as e:
+    print(f"Connection failed with clients!: {e}")
+  except KeyboardInterrupt:
+    print("Closing connection!")
+  finally:
+    server.close()
