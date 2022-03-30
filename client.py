@@ -47,6 +47,6 @@ if __name__ == '__main__':
 
     for thr in threads_list:
       thr.join()
-  except KeyboardInterrupt:
+  except:
     print("Closing client!")
     client.close()
