@@ -1,4 +1,4 @@
-import threading, socket
+import threading, time, socket
 
 
 class Server:
@@ -45,6 +45,9 @@ class Server:
         thread.daemon = True
         thread.start()
       except:
+        self.broadcast("Server is out!".encode())
+        print('An error occurred!')
+        time.sleep(5)
         print("Closing connection!")
         break
 

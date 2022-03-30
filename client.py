@@ -8,6 +8,10 @@ class Client:
         message = client.recv(1024).decode()
         if message == 'nickname':
           client.send(nickname.encode())
+        if message == 'Server is out!':
+          print(message)
+          client.close()
+          break
         else:
           print(message)
       except:
