@@ -39,7 +39,7 @@ class Server:
 
         print(f'Nickname ok the client is {nickname}!')
         self.broadcast(f"{nickname} joined the chat!".encode())
-        client.send('Connected to the server!'.encode())
+        client.send('\nConnected to the server!'.encode())
 
         thread = threading.Thread(target=self.handle, args=(client,))
         thread.daemon = True

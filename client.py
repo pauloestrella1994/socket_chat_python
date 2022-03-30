@@ -29,7 +29,7 @@ class Client:
 if __name__ == '__main__':
   host = '127.0.0.1'
   port = 55555
-  nickname = input("choose a nickname: ")
+  nickname = input("Choose a nickname: ")
   threads_list = []
   try:
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
