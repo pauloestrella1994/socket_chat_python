@@ -21,8 +21,10 @@ class Client:
         message = f'{nickname}: {input("")}'
         client.send(message.encode())
       except:
-        if client:
-          client.close()
+        print('An error occurred!')
+        client.close()
+        break
+        
 
 if __name__ == '__main__':
   host = '127.0.0.1'
