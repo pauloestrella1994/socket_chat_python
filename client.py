@@ -23,6 +23,7 @@ class Client:
     while True:
       try:
         message = f'{nickname}: {input("")}'
+        client.send(len(message).to_bytes(4, byteorder='big'))
         client.send(message.encode())
       except:
         print('An error occurred!')

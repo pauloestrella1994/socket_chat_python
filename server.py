@@ -15,7 +15,8 @@ class Server:
   def handle(self, client: socket.socket):
     while True:
       try:
-        message = client.recv(1024)
+        size = client.recv(4)
+        message = client.recv(int.from_bytes(size, byteorder="big"))
         self.broadcast(message)
       except:
         index = self.clients.index(client)
